@@ -1,0 +1,192 @@
+//Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""res\\Saver.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "\r\n"
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "#include ""afxres.rc""  // Standard components\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Saver.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG 34, 22, 217, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Saver"
+FONT 8, "MS Sans Serif"
+{
+ CONTROL IDR_MAINFRAME, IDC_STATIC, "STATIC", SS_ICON | WS_CHILD | WS_VISIBLE, 11, 17, 16, 16
+ CONTROL "Saver Version 1.0", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 40,10,119,8
+ CONTROL "Copyright \251 1995", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 40,25,119,8
+ CONTROL "OK", IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 176,6,32,14
+}
+
+IDD_SAVER_DIALOG DIALOG 0, 0, 197, 150
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Saver"
+FONT 8, "MS Sans Serif"
+{
+ CONTROL "Pen", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 5, 6, 95, 38
+ CONTROL "Width", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 11,22,30,8
+ CONTROL "", IDC_EDIT_WIDTH, "EDIT", ES_LEFT | ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 51,20,40,13
+ CONTROL "Resolution", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 4, 52, 113, 40
+ CONTROL "Low", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 12, 64, 30, 8
+ CONTROL "High", IDC_STATIC, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 76, 64, 30, 8
+ CONTROL "", IDC_SCROLLBAR_RES, "SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 12, 76, 94, 11
+ CONTROL "Speed", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 4, 100, 113, 40
+ CONTROL "Slow", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 13, 113, 30, 8
+ CONTROL "Fast", IDC_STATIC, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 76, 113, 30, 8
+ CONTROL "", IDC_SCROLLBAR_SPEED, "SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 12, 124, 94, 11
+ CONTROL "OK", IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,14,50,14
+ CONTROL "Cancel", IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,31,50,14
+ CONTROL "", IDC_PREVIEW, "STATIC", SS_LEFT | WS_CHILD | NOT WS_VISIBLE, 128,77,64,48
+ CONTROL "Color...", IDC_BUTTON_COLOR, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,49,50,14
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "SAVER MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "SAVER\0"
+            VALUE "LegalCopyright", "Copyright \251 1995\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "SAVER.EXE\0"
+            VALUE "ProductName", "SAVER Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_NULLCURSOR          CURSOR  DISCARDABLE     "res\\cursor1.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About Saver..."
+    IDS_SCREENSAVER         "This is a screen saver and can not be run as a standalone executable."
+END
+
+STRINGTABLE 
+{
+ IDS_DESCRIPTION, "Tree Screen Saver"
+}
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "res\Saver.rc2"  // non-Microsoft Visual C++ edited resources
+
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+#include "afxres.rc"  // Standard components
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
