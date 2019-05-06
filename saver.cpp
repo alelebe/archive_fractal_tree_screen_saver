@@ -6,16 +6,11 @@
 #include "drawwnd.h"
 #include "Saverdlg.h"
 #include "saverwnd.h"
+#include <string>
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char BASED_CODE THIS_FILE[] = __FILE__;
-#endif
-
-#ifdef __BORLANDC__
-#include <dos.h>
-#define __argc _argc
-#define __argv _argv
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -29,7 +24,7 @@ BEGIN_MESSAGE_MAP(CSaverApp, CWinApp)
 	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-TCHAR szConfig[]=_T("Config");
+TCHAR szConfig[]="Config";
 
 /////////////////////////////////////////////////////////////////////////////
 // CSaverApp construction
@@ -64,14 +59,13 @@ BOOL CSaverApp::InitInstance()
 	//  of your final executable, you should remove from the following
 	//  the specific initialization routines you do not need.
 
-	Enable3dControls();
-	SetRegistryKey(_T("MFC Screen Savers Inc."));
+	SetRegistryKey("Fractal Tree Screen Savers");
 
-	if (__argc == 1 || MatchOption(__argv[1], _T("c")))
+	if (__argc == 1 || MatchOption(__argv[1], "c"))
 		DoConfig();
-	else if (MatchOption(__argv[1], _T("p")))
+	else if (MatchOption(__argv[1], "p"))
 	{
-		CWnd* pParent = CWnd::FromHandle((HWND)atol(__argv[2]));
+		CWnd* pParent = CWnd::FromHandle((HWND)std::stoull(__argv[2]));
 		ASSERT(pParent != NULL);
 		CDrawWnd* pWnd = new CDrawWnd();
 		CRect rect;
@@ -80,7 +74,7 @@ BOOL CSaverApp::InitInstance()
 		m_pMainWnd = pWnd;
 		return TRUE;
 	}
-	else if (MatchOption(__argv[1], _T("s")))
+	else if (MatchOption(__argv[1], "s"))
 	{
 		CSaverWnd* pWnd = new CSaverWnd;
 		pWnd->Create();
@@ -93,8 +87,8 @@ BOOL CSaverApp::InitInstance()
 void CSaverApp::DoConfig()
 {
 	CSaverDlg dlg;
-	dlg.m_nWidth = GetProfileInt(szConfig, _T("Width"), 10);
-	int nStyle = GetProfileInt(szConfig, _T("Style"), 0);
+	dlg.m_nWidth = GetProfileInt(szConfig, "Width", 10);
+	int nStyle = GetProfileInt(szConfig, "Style", 0);
 	dlg.m_nCapStyle = 0;
 	if ((nStyle & PS_ENDCAP_MASK) == PS_ENDCAP_SQUARE)
 		dlg.m_nCapStyle = 1;
@@ -106,18 +100,18 @@ void CSaverApp::DoConfig()
 	else if ((nStyle & PS_JOIN_MASK) == PS_JOIN_MITER)
 		dlg.m_nJoinStyle = 2;
 
-	dlg.m_nResolution = GetProfileInt(szConfig, _T("Resolution"), 10);
-	dlg.m_nSpeed = GetProfileInt(szConfig, _T("Speed"), 100);
-	dlg.m_color = RGB(GetProfileInt(szConfig, _T("ColorRed"), 255),
-		GetProfileInt(szConfig, _T("ColorGreen"), 0),
-		GetProfileInt(szConfig, _T("ColorBlue"), 0));
+	dlg.m_nResolution = GetProfileInt(szConfig, "Resolution", 10);
+	dlg.m_nSpeed = GetProfileInt(szConfig, "Speed", 100);
+	dlg.m_color = RGB(GetProfileInt(szConfig, "ColorRed", 255),
+		GetProfileInt(szConfig, "ColorGreen", 0),
+		GetProfileInt(szConfig, "ColorBlue", 0));
 	m_pMainWnd = &dlg;
 	if (dlg.DoModal() == IDOK)
 	{
-		WriteProfileInt(szConfig, _T("ColorRed"), GetRValue(dlg.m_color));
-		WriteProfileInt(szConfig, _T("ColorGreen"), GetGValue(dlg.m_color));
-		WriteProfileInt(szConfig, _T("ColorBlue"), GetBValue(dlg.m_color));
-		WriteProfileInt(szConfig, _T("Width"), dlg.m_nWidth);
+		WriteProfileInt(szConfig, "ColorRed", GetRValue(dlg.m_color));
+		WriteProfileInt(szConfig, "ColorGreen", GetGValue(dlg.m_color));
+		WriteProfileInt(szConfig, "ColorBlue", GetBValue(dlg.m_color));
+		WriteProfileInt(szConfig, "Width", dlg.m_nWidth);
 		int nStyle = 0;
 		if (dlg.m_nCapStyle == 0)
 			nStyle = PS_ENDCAP_ROUND;
@@ -131,8 +125,8 @@ void CSaverApp::DoConfig()
 			nStyle |= PS_JOIN_BEVEL;
 		else if (dlg.m_nJoinStyle == 2)
 			nStyle |= PS_JOIN_MITER;
-		WriteProfileInt(szConfig, _T("Style"), nStyle);
-		WriteProfileInt(szConfig, _T("Resolution"), dlg.m_nResolution);
-		WriteProfileInt(szConfig, _T("Speed"), dlg.m_nSpeed);
+		WriteProfileInt(szConfig, "Style", nStyle);
+		WriteProfileInt(szConfig, "Resolution", dlg.m_nResolution);
+		WriteProfileInt(szConfig, "Speed", dlg.m_nSpeed);
 	}
 }

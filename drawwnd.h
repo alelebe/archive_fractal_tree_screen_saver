@@ -60,7 +60,7 @@ protected:
         // Generated message map functions
 protected:
         //{{AFX_MSG(CDrawWnd)
-        afx_msg void OnTimer(UINT nIDEvent);
+        afx_msg void OnTimer(UINT_PTR nIDEvent);
         afx_msg void OnPaint();
         afx_msg void OnSize(UINT nType, int cx, int cy);
         afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

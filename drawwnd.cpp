@@ -131,7 +131,7 @@ void CDrawWnd::SetLineStyle(int nStyle)
 /////////////////////////////////////////////////////////////////////////////
 // CDrawWnd message handlers
 
-void CDrawWnd::OnTimer(UINT nIDEvent)
+void CDrawWnd::OnTimer(UINT_PTR nIDEvent)
 {
         if (nIDEvent == 1)
         {
@@ -207,7 +207,7 @@ BOOL CDrawWnd::Create(DWORD dwExStyle, DWORD dwStyle, const RECT& rect,
         }
 
         // TODO: Add your specialized code here and/or call the base class
-        return CreateEx(dwExStyle, m_lpszClassName, _T(""), dwStyle,
+        return CreateEx(dwExStyle, m_lpszClassName, "", dwStyle,
                 rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
                 pParentWnd->GetSafeHwnd(), NULL, NULL );
 }
