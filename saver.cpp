@@ -102,8 +102,8 @@ void CSaverApp::DoConfig()
 
 	dlg.m_nResolution = GetProfileInt(szConfig, "Resolution", 10);
 	dlg.m_nSpeed = GetProfileInt(szConfig, "Speed", 100);
-	dlg.m_color = RGB(GetProfileInt(szConfig, "ColorRed", 255),
-		GetProfileInt(szConfig, "ColorGreen", 0),
+	dlg.m_color = RGB(GetProfileInt(szConfig, "ColorRed", 0),
+		GetProfileInt(szConfig, "ColorGreen", 255),
 		GetProfileInt(szConfig, "ColorBlue", 0));
 	m_pMainWnd = &dlg;
 	if (dlg.DoModal() == IDOK)

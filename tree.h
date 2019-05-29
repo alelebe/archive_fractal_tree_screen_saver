@@ -10,17 +10,14 @@
 class CTree
 {
 public:
-   CTree();
-   ~CTree();
-   virtual void put(double x, double y) = 0;
-   void Render();
+	CTree();
+	void Render();
 
 protected:
-   int a[4][3][4];
-   enum {
-      START_X = 320,
-      START_Y = 350,
-   };
+	virtual void tree_placePoint(int x, int y, int z) = 0;
+
+private:
+	static int const a[4][3][4];
 };
 
 /////////////////////////////////////////////////////////////////////////////
