@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDrawWnd window
 
-class CDrawWnd : public CWnd, public CTree
+class CDrawWnd : public CWnd
 {
 	// Construction
 public:
@@ -15,7 +15,6 @@ public:
 	// Attributes
 public:
 	//CRgn m_rgnLast;
-	int m_nWidth;
 	int m_nSteps;
 	int m_nStyle;
 	int m_nSpeed;
@@ -29,8 +28,11 @@ public:
 
 private:
 	int m_nScale;
+	int m_nWidth;
+	int m_nHeight;
 	int m_nXstart;
 	int m_nYstart;
+	CTree m_Tree;
 
 	//LOGBRUSH m_logbrush;
 	//LOGBRUSH m_logbrushBlack;
@@ -46,7 +48,7 @@ public:
 	// Operations
 private:
 	void Draw(CDC& dc);
-	virtual void tree_placePoint(int x, int y, int z);
+	void MoveNext();
 
 	// Overrides
 public:
@@ -57,16 +59,12 @@ public:
 	//}}AFX_VIRTUAL
 
 // Implementation
-public:
-	virtual ~CDrawWnd();
-
 private:
 	enum {
 		TIMER_ID = 1
 	};
 
 	BOOL	m_bAutoDelete;
-	HDC		m_hDC;
 
 	// Generated message map functions
 protected:

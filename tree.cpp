@@ -22,7 +22,7 @@ CTree::CTree()
 	srand(static_cast<unsigned int>(time(nullptr)));
 }
 
-void CTree::Render()
+void CTree::Render(PlotPointFn plotPoint)
 {
 	int b[100];
 	int k;
@@ -41,7 +41,7 @@ void CTree::Render()
 		x = newx;
 		y = newy;
 		
-		tree_placePoint(x, y, z);
+		plotPoint(x, y, z);
 	}
 }
 

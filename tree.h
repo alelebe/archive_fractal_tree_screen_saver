@@ -4,6 +4,9 @@
 #ifndef __TREE_H
 #define __TREE_H
 
+#include <functional>
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CTree class
 
@@ -11,10 +14,9 @@ class CTree
 {
 public:
 	CTree();
-	void Render();
 
-protected:
-	virtual void tree_placePoint(int x, int y, int z) = 0;
+	using PlotPointFn = std::function<void(int x, int y, int z)>;
+	void Render(PlotPointFn fn);
 
 private:
 	static int const a[4][3][4];

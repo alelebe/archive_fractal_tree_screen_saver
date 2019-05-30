@@ -14,9 +14,9 @@ LPCTSTR CDrawWnd::m_lpszClassName = NULL;
 
 enum {
 	START_X = 220,
-	START_Y = 350,
+	START_Y = 345,
 	MAX_X = START_X * 31 / 20,
-	MAX_Y = START_Y + 1,
+	MAX_Y = START_Y + 5,
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,22 +25,22 @@ enum {
 CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 {
 	m_bAutoDelete = bAutoDelete;
-	m_hDC = NULL;
 
 	/*m_nPos = 0;
 	m_nStep = 1;*/
 	//m_rgnLast.CreateRectRgn(0, 0, 0, 0);
 
-	m_nWidth = AfxGetApp()->GetProfileInt("Config", "Width", 10);
-	m_nSteps = AfxGetApp()->GetProfileInt("Config", "Resolution", 10);
 	m_nStyle = AfxGetApp()->GetProfileInt("Config", "Style", PS_ENDCAP_ROUND | PS_JOIN_ROUND);
+	//m_nWidth = AfxGetApp()->GetProfileInt("Config", "Width", 10);
+	m_nSteps = AfxGetApp()->GetProfileInt("Config", "Steps", 5);
 	if (m_nSteps < 1)
-		m_nSteps = 1;
+		m_nSteps = 5;
 	m_nSpeed = AfxGetApp()->GetProfileInt("Config", "Speed", 1);
 	if (m_nSpeed < 0)
-		m_nSpeed = 0;
+		m_nSpeed = 1;
 	
-	m_Color = RGB(AfxGetApp()->GetProfileInt("Config", "ColorRed", 0),
+	m_Color = RGB(
+		AfxGetApp()->GetProfileInt("Config", "ColorRed", 0),
 		AfxGetApp()->GetProfileInt("Config", "ColorGreen", 255),
 		AfxGetApp()->GetProfileInt("Config", "ColorBlue", 0));
 
@@ -51,10 +51,6 @@ CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 	//        AfxGetApp()->GetProfileInt("Config", "ColorGreen", 0),
 	//        AfxGetApp()->GetProfileInt("Config", "ColorBlue", 0));
 	//m_logbrushBlack.lbColor = RGB(0, 0, 0);
-}
-
-CDrawWnd::~CDrawWnd()
-{
 }
 
 BEGIN_MESSAGE_MAP(CDrawWnd, CWnd)
@@ -69,41 +65,52 @@ END_MESSAGE_MAP()
 
 void CDrawWnd::Draw(CDC& dc)
 {
-        //dc.SetPolyFillMode(WINDING);
+	CDC memDC;
+	memDC.CreateCompatibleDC(&dc);
 
-        //CPen penblack(PS_SOLID|PS_GEOMETRIC|m_nStyle, nWidth, &m_logbrushBlack);
-        //CPen penred(PS_SOLID|PS_GEOMETRIC|m_nStyle, nWidth, &m_logbrush);
-        //CBrush brushBlack(m_logbrushBlack.lbColor);
-        //CBrush brushRed(m_logbrush.lbColor);
-        //CRgn rgnNew, rgnBlack;
+	CBitmap memBM;
+	memBM.CreateCompatibleBitmap(&dc, MAX_X, MAX_Y);
+	memDC.SelectObject(memBM);
 
-        //CPen* pPen = dc.SelectObject(&penred);
-        //dc.BeginPath();
+	BITMAP bitmap;
+	memBM.GetBitmap(&bitmap);
+	memDC.BitBlt(0, 0, bitmap.bmWidth, bitmap.bmHeight, &dc, m_nXstart, m_nYstart, SRCCOPY);
 
-	m_hDC = dc.m_hDC;
-    Render();
-	m_hDC = NULL;
+	CRect rect(m_nXstart, m_nYstart, m_nXstart + bitmap.bmWidth, m_nYstart + bitmap.bmHeight);
+	CBrush brush(RGB(0, 0, 0));
+	dc.FillRect(&rect, &brush);
 
-        //dc.EndPath();
-        //dc.WidenPath();
-        //rgnNew.CreateFromPath(&dc);
+	MoveNext();
 
-        //rgnBlack.CreateRectRgn(0,0,0,0);
-        //rgnBlack.CombineRgn(&m_rgnLast, &rgnNew, RGN_DIFF);
-        //dc.FillRgn(&rgnBlack, &brushBlack);
-        //dc.FillRgn(&rgnNew, &brushRed);
+	m_Tree.Render( [&](int x, int y, int z) {
+		//int px = m_nXstart - (double(x - z) / double(START_X)) * m_nScale;
+		//int py = m_nYstart - double(y) / double(START_Y) * m_nScale;
+		memDC.SetPixelV(START_X - (x - z), START_Y - y, m_Color);
+		dc.BitBlt(m_nXstart, m_nYstart, bitmap.bmWidth, bitmap.bmHeight, &memDC, 0, 0, SRCCOPY);
+	});
 
-        //dc.SelectObject(pPen);
-        //m_rgnLast.DeleteObject();
-        //m_rgnLast.Attach(rgnNew.Detach());
+	memBM.DeleteObject();
+	memDC.DeleteDC();
+}
+
+void CDrawWnd::MoveNext()
+{
+	m_nXstart += m_nSteps;
+	m_nYstart += m_nSteps;
+
+	if (m_nXstart + MAX_X >= m_nWidth) {
+		m_nXstart = 0;
+	}
+	if (m_nYstart + MAX_Y >= m_nHeight) {
+		m_nYstart = 0;
+	}
 }
 
 void CDrawWnd::SetSpeed(int nSpeed)
 {
 	KillTimer(TIMER_ID);
 	m_nSpeed = nSpeed;
-	VERIFY(SetTimer(TIMER_ID, 50 + 500 - m_nSpeed * 5, NULL) != 0);
-		
+	VERIFY(SetTimer(TIMER_ID, 500 + 500 - m_nSpeed * 5, NULL) != 0);
 }
 
 void CDrawWnd::SetResolution(int nRes)
@@ -182,9 +189,9 @@ void CDrawWnd::OnPaint()
 	//int nWidth = m_nWidth * rect.Width() + ::GetSystemMetrics(SM_CXSCREEN)/2;
 	//nWidth = nWidth/::GetSystemMetrics(SM_CXSCREEN);
 
-	CBrush frameBrush(RGB(64, 64, 64));
-	CRect frameRect(0, 0, MAX_X, MAX_Y);
-	dc.FrameRect(&rect, &frameBrush);
+	//CBrush frameBrush(RGB(64, 64, 64));
+	//CRect frameRect(0, 0, MAX_X, MAX_Y);
+	//dc.FrameRect(&rect, &frameBrush);
 
 	Draw(dc);
 	// Do not call CWnd::OnPaint() for painting messages
@@ -194,6 +201,11 @@ void CDrawWnd::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
 
+	CRect rect;
+	GetClientRect(&rect);
+	m_nWidth = rect.Width();
+	m_nHeight = rect.Height();
+
 	/*m_nScale = 0xFFFF*cx/640;
 	m_nHeight = cy;*/
 
@@ -201,8 +213,8 @@ void CDrawWnd::OnSize(UINT nType, int cx, int cy)
 	//m_nYres = cy;
 
 	m_nScale = min(cx, cy);
-	m_nXstart = cx / 2;
-	m_nYstart = cy;
+	m_nXstart = 0;
+	m_nYstart = 0;
 }
 
 int CDrawWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -235,13 +247,4 @@ void CDrawWnd::PostNcDestroy()
 {
 	if (m_bAutoDelete)
 		delete this;
-}
-
-void CDrawWnd::tree_placePoint(int x, int y, int z)
-{
-	if (m_hDC) {
-		//int px = m_nXstart - (double(x - z) / double(START_X)) * m_nScale;
-		//int py = m_nYstart - double(y) / double(START_Y) * m_nScale;
-		::SetPixelV(m_hDC, START_X - (x - z), START_Y - y, m_Color);
-	}
 }
