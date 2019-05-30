@@ -89,7 +89,7 @@ void CSaverWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	CDrawWnd::OnActivate(nState, pWndOther, bMinimized);
 }
 
-void CSaverWnd::OnActivateApp(BOOL bActive, HTASK hTask) 
+void CSaverWnd::OnActivateApp(BOOL bActive, DWORD hTask)
 {
 	if (!bActive)
 		PostMessage(WM_CLOSE);

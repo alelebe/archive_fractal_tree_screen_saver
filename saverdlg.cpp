@@ -265,7 +265,7 @@ void CSaverDlg::OnKillfocusEditWidth()
 }
 
 void CSaverDlg::OnSelendokStyle() 
-{
+{/*
 	int nStyle = 0;
 	int nSel = m_comboStyle.GetCurSel();
 	if (nSel < 0)
@@ -286,4 +286,4 @@ void CSaverDlg::OnSelendokStyle()
 	else
 		nStyle |= PS_JOIN_MITER;
 	m_wndPreview.SetLineStyle(nStyle);
-}
+*/}
