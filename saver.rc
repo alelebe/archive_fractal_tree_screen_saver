@@ -1,4 +1,4 @@
-//Microsoft Visual C++ generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -12,6 +12,12 @@
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
+/////////////////////////////////////////////////////////////////////////////
+// English (United Kingdom) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -19,18 +25,18 @@
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#include ""res\\Saver.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "\r\n"
@@ -42,7 +48,6 @@ BEGIN
     "\0"
 END
 
-/////////////////////////////////////////////////////////////////////////////
 #endif    // APSTUDIO_INVOKED
 
 
@@ -51,45 +56,48 @@ END
 // Icon
 //
 
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Saver.ico"
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Saver.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG 34, 22, 217, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOGEX 34, 22, 217, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About Saver"
-FONT 8, "MS Sans Serif"
-{
- CONTROL IDR_MAINFRAME, IDC_STATIC, "STATIC", SS_ICON | WS_CHILD | WS_VISIBLE, 11, 17, 16, 16
- CONTROL "Saver Version 1.0", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 40,10,119,8
- CONTROL "Copyright \251 1995", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 40,25,119,8
- CONTROL "OK", IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 176,6,32,14
-}
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Fractal Tree Saver",IDC_STATIC,40,10,119,8
+    LTEXT           "Copyright © 1995",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,176,6,32,14,WS_GROUP
+END
 
-IDD_SAVER_DIALOG DIALOG 0, 0, 197, 150
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_SAVER_DIALOG DIALOGEX 0, 0, 249, 190
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Saver"
-FONT 8, "MS Sans Serif"
-{
- CONTROL "Pen", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 5, 6, 95, 38
- CONTROL "Width", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 11,22,30,8
- CONTROL "", IDC_EDIT_WIDTH, "EDIT", ES_LEFT | ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 51,20,40,13
- CONTROL "Resolution", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 4, 52, 113, 40
- CONTROL "Low", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 12, 64, 30, 8
- CONTROL "High", IDC_STATIC, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 76, 64, 30, 8
- CONTROL "", IDC_SCROLLBAR_RES, "SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 12, 76, 94, 11
- CONTROL "Speed", IDC_STATIC, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 4, 100, 113, 40
- CONTROL "Slow", IDC_STATIC, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 13, 113, 30, 8
- CONTROL "Fast", IDC_STATIC, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 76, 113, 30, 8
- CONTROL "", IDC_SCROLLBAR_SPEED, "SCROLLBAR", SBS_HORZ | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 12, 124, 94, 11
- CONTROL "OK", IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,14,50,14
- CONTROL "Cancel", IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,31,50,14
- CONTROL "", IDC_PREVIEW, "STATIC", SS_LEFT | WS_CHILD | NOT WS_VISIBLE, 128,77,64,48
- CONTROL "Color...", IDC_BUTTON_COLOR, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 137,49,50,14
-}
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Pen",IDC_STATIC,5,6,111,38,WS_TABSTOP
+    LTEXT           "Width",IDC_STATIC,11,22,30,8
+    EDITTEXT        IDC_EDIT_WIDTH,67,20,40,13,ES_AUTOHSCROLL
+    GROUPBOX        "Resolution",IDC_STATIC,4,74,113,40,WS_TABSTOP
+    LTEXT           "Low",IDC_STATIC,12,86,30,8
+    RTEXT           "High",IDC_STATIC,76,86,30,8
+    SCROLLBAR       IDC_SCROLLBAR_RES,12,98,94,11,WS_GROUP | WS_TABSTOP
+    GROUPBOX        "Speed",IDC_STATIC,4,133,113,40,WS_TABSTOP
+    LTEXT           "Slow",IDC_STATIC,13,146,30,8
+    RTEXT           "Fast",IDC_STATIC,76,146,30,8
+    SCROLLBAR       IDC_SCROLLBAR_SPEED,12,157,94,11,WS_GROUP | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,165,14,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,31,50,14
+    LTEXT           "",IDC_PREVIEW,124,75,119,109,NOT WS_VISIBLE | NOT WS_GROUP
+    PUSHBUTTON      "Color...",IDC_BUTTON_COLOR,165,49,50,14
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -114,15 +122,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "SAVER MFC Application\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "SAVER\0"
-            VALUE "LegalCopyright", "Copyright \251 1995\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "SAVER.EXE\0"
-            VALUE "ProductName", "SAVER Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "FileDescription", "SAVER MFC Application"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "SAVER"
+            VALUE "LegalCopyright", "Copyright © 1995"
+            VALUE "OriginalFilename", "SAVER.EXE"
+            VALUE "ProductName", "SAVER Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -132,19 +138,49 @@ BEGIN
 END
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Cursor
 //
 
-IDC_NULLCURSOR          CURSOR  DISCARDABLE     "res\\cursor1.cur"
+IDC_NULLCURSOR          CURSOR                  "res\\cursor1.cur"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Dialog Info
+// DESIGNINFO
 //
 
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+    END
+
+    IDD_SAVER_DIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 243
+        BOTTOMMARGIN, 184
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_SAVER_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -152,7 +188,7 @@ IDC_NULLCURSOR          CURSOR  DISCARDABLE     "res\\cursor1.cur"
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -162,16 +198,20 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     IDS_ABOUTBOX            "&About Saver..."
     IDS_SCREENSAVER         "This is a screen saver and can not be run as a standalone executable."
 END
 
-STRINGTABLE 
-{
- IDS_DESCRIPTION, "Tree Screen Saver"
-}
+STRINGTABLE
+BEGIN
+    IDS_DESCRIPTION         "Fractal Tree Saver"
+END
+
+#endif    // English (United Kingdom) resources
+/////////////////////////////////////////////////////////////////////////////
+
 
 
 #ifndef APSTUDIO_INVOKED

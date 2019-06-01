@@ -8,4 +8,7 @@
     <LocalDebuggerCommandArguments>/s</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup>
+    <RESOURCE_FILE>saver.rc</RESOURCE_FILE>
+  </PropertyGroup>
 </Project>

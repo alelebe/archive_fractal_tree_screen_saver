@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "Saver.h"
+#include "saver.h"
 #include "drawwnd.h"
 #include "saverwnd.h"
 

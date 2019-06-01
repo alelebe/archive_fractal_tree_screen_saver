@@ -14,28 +14,30 @@ public:
 
 	// Attributes
 public:
-	//CRgn m_rgnLast;
-	int m_nSteps;
 	int m_nStyle;
 	int m_nSpeed;
 
 	//int m_nPos;
 	//int m_nStep;
 
-	//int m_nXres;
-	//int m_nYres;
-	COLORREF m_Color;
-
 private:
-	int m_nScale;
+	CBitmap	 m_compBitmap;
+	COLORREF m_color;
+
 	int m_nWidth;
 	int m_nHeight;
+
 	int m_nXstart;
 	int m_nYstart;
-	CTree m_Tree;
+	int m_nXstep;
+	int m_nYstep;
 
-	//LOGBRUSH m_logbrush;
-	//LOGBRUSH m_logbrushBlack;
+	int m_nXres;
+	int m_nYres;
+
+	CTree m_Tree;
+	int m_nPoints;
+
 	static LPCTSTR m_lpszClassName;
 
 public:
@@ -47,8 +49,8 @@ public:
 
 	// Operations
 private:
-	void Draw(CDC& dc);
-	void MoveNext();
+	void Draw(CDC& wndDC);
+	void MoveDrawing(CDC& wndDC, CDC& memDC);
 
 	// Overrides
 public:

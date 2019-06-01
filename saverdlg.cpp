@@ -2,9 +2,9 @@
 //
 
 #include "stdafx.h"
-#include "Saver.h"
+#include "saver.h"
 #include "drawwnd.h"
-#include "Saverdlg.h"
+#include "saverdlg.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE

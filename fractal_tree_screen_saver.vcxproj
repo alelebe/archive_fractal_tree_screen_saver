@@ -133,7 +133,11 @@
     <ResourceCompile Include="saver.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\cursor1.cur" />
     <None Include="res\saver.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Saver.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
