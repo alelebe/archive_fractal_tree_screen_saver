@@ -124,6 +124,7 @@ BOOL CSaverDlg::OnInitDialog()
 	ScreenToClient(&rect);
 	m_wndPreview.Create(NULL, WS_VISIBLE|WS_CHILD, rect, this, NULL);
 	m_wndPreview.SetColor(m_color);
+	//m_wndPreview.SetPreview();
 	m_wndPreview.SetResolution(m_nResolution);
 	m_wndPreview.SetSpeed(m_nSpeed);
 	OnSelendokStyle();

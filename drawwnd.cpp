@@ -25,6 +25,8 @@ enum {
 CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 {
 	m_bAutoDelete = bAutoDelete;
+	m_bAutoStretch = FALSE;
+
 	m_nXres = m_nYres = 0;
 	m_nPoints = 0;
 
@@ -36,7 +38,7 @@ CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 	
 	int nSteps = AfxGetApp()->GetProfileInt("Config", "Steps", 1);
 	if (nSteps <= 1)
-		nSteps = 25;
+		nSteps = 3;
 	m_nXstep = m_nYstep = nSteps;
 
 	m_nSpeed = AfxGetApp()->GetProfileInt("Config", "Speed", 100);
@@ -75,35 +77,49 @@ void CDrawWnd::Draw(CDC& wndDC)
 		m_nPoints++;
 		COLORREF color = (m_nPoints / 15000) % 2 ? RGB(0, 0, 0) : m_color;
 
-		wndDC.SetPixelV(px, py, color);
+		//wndDC.SetPixelV(px, py, color);
 		memDC.SetPixelV(px, py, color);
-		wndDC.BitBlt(m_nXstart, m_nYstart, MAX_X, MAX_Y, &memDC, 0, 0, SRCPAINT);
+		StretchDrawing(wndDC, memDC);
 	});
 
 	MoveDrawing(wndDC, memDC);
 	memDC.SelectObject(pOldBitmap);
 }
 
+void  CDrawWnd::StretchDrawing(CDC& wndDC, CDC& memDC)
+{
+	if (m_bAutoStretch) {
+		wndDC.SetStretchBltMode(WHITEONBLACK);
+		wndDC.StretchBlt(m_nXstart, m_nYstart, m_nXlength, m_nYlength, &memDC, 0, 0, MAX_X, MAX_Y, SRCPAINT);
+	}
+	else {
+		wndDC.BitBlt(m_nXstart, m_nYstart, MAX_X, MAX_Y, &memDC, 0, 0, SRCPAINT);
+	}
+}
+
 void CDrawWnd::MoveDrawing(CDC &wndDC, CDC &memDC)
 {
+	if (m_bAutoStretch)
+		return;
+
 	int oldX = m_nXstart;
 	int oldY = m_nYstart;
 
 	m_nXstart += m_nXstep;
 	m_nYstart += m_nYstep;
 
-	if (m_nXstart + MAX_X >= m_nWidth) {
+	if (m_nXstart + MAX_X >= m_nXres) {
 		m_nXstep = -m_nXstep;
-		//m_nXstart = m_nWidth - MAX_X;
+		//m_nXstart = m_nXres - MAX_X;
 	}
 	else if (m_nXstart <= 0) {
 		m_nXstep = -m_nXstep;
 		//m_nXstart = 0;
 	}
 
-	if (m_nYstart + MAX_Y >= m_nHeight) {
+	if (m_nYstart + MAX_Y >= m_nYres) {
 		m_nYstep = -m_nYstep;
-		//m_nYstart = m_nHeight - MAX_Y;
+		//m_nYstart = m_nYres - MAX_Y;
 	}
 	else if (m_nYstart <= 0) {
 		m_nYstep = -m_nYstep;
@@ -136,13 +152,13 @@ void CDrawWnd::SetResolution(int nRes)
 
 void CDrawWnd::SetPenWidth(int nWidth)
 {
-	/*if (nWidth != m_nWidth)
-	{
-		CRect rect;
-		m_nWidth = nWidth;
-		Invalidate();
-		UpdateWindow();
-	}*/
+	//if (nWidth != m_nWidth)
+	//{
+	//	CRect rect;
+	//	m_nWidth = nWidth;
+	//	Invalidate();
+	//	UpdateWindow();
+	//}
 }
 
 void CDrawWnd::SetColor(COLORREF cr)
@@ -168,10 +184,6 @@ void CDrawWnd::OnTimer(UINT_PTR nIDEvent)
 	if (nIDEvent == TIMER_ID)
 	{
 		CClientDC dc(this);
-		/*CRect rect;
-		GetClientRect(&rect);
-		int nWidth = m_nWidth * rect.Width() + ::GetSystemMetrics(SM_CXSCREEN)/2;
-		nWidth = nWidth/::GetSystemMetrics(SM_CXSCREEN);*/
 		Draw(dc);
 	}
 	else
@@ -186,8 +198,6 @@ void CDrawWnd::OnPaint()
 	CRect rect;
 	GetClientRect(rect);
 	dc.FillRect(&rect, &brush);
-	//int nWidth = m_nWidth * rect.Width() + ::GetSystemMetrics(SM_CXSCREEN)/2;
-	//nWidth = nWidth/::GetSystemMetrics(SM_CXSCREEN);
 
 	//CBrush frameBrush(m_color);
 	//CRect frameRect(m_nXstart, m_nYstart, m_nXstart + MAX_X, m_nYstart + MAX_Y);
@@ -200,17 +210,32 @@ void CDrawWnd::OnPaint()
 void CDrawWnd::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
-
-	CRect rect;
-	GetClientRect(&rect);
-	m_nWidth = rect.Width();
-	m_nHeight = rect.Height();
-
-	m_nXstart = (m_nWidth - MAX_X) / 2;
-	m_nYstart = (m_nHeight - MAX_Y) / 2;
-
 	//m_nXres = cx;
 	//m_nYres = cy;
+	CRect rect;
+	GetClientRect(&rect);
+	m_nXres = rect.Width();
+	m_nYres = rect.Height();
+	m_bAutoStretch = (m_nXres < MAX_X || m_nYres < MAX_Y);
+	//m_bAutoStretch = TRUE;
+
+	if (m_bAutoStretch) {
+		double xRatio = double(m_nXres) / MAX_X;
+		double yRatio = double(m_nYres) / MAX_Y;
+
+		if (xRatio < yRatio)		yRatio = xRatio;
+		else if (yRatio < xRatio)	xRatio = yRatio;
+
+		m_nXlength = static_cast<int>(xRatio * MAX_X);
+		m_nYlength = static_cast<int>(yRatio * MAX_Y);
+	}
+	else {
+		m_nXlength = MAX_X;
+		m_nYlength = MAX_Y;
+	}
+
+	m_nXstart = (m_nXres - m_nXlength) / 2;
+	m_nYstart = (m_nYres - m_nYlength) / 2;
 }
 
 int CDrawWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)

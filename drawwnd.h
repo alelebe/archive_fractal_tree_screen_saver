@@ -19,29 +19,11 @@ public:
 
 	//int m_nPos;
 	//int m_nStep;
-
-private:
-	CBitmap	 m_compBitmap;
-	COLORREF m_color;
-
-	int m_nWidth;
-	int m_nHeight;
-
-	int m_nXstart;
-	int m_nYstart;
-	int m_nXstep;
-	int m_nYstep;
-
-	int m_nXres;
-	int m_nYres;
-
-	CTree m_Tree;
-	int m_nPoints;
-
-	static LPCTSTR m_lpszClassName;
+	//int m_nWidth;
 
 public:
 	void SetSpeed(int nSpeed);
+	//void SetPreview(BOOL bPreviewMode = TRUE);
 	void SetResolution(int nRes);
 	void SetColor(COLORREF cr);
 	void SetPenWidth(int nWidth);
@@ -51,6 +33,7 @@ public:
 private:
 	void Draw(CDC& wndDC);
 	void MoveDrawing(CDC& wndDC, CDC& memDC);
+	void StretchDrawing(CDC& wndDC, CDC& memDC);
 
 	// Overrides
 public:
@@ -67,6 +50,24 @@ private:
 	};
 
 	BOOL	m_bAutoDelete;
+	BOOL	m_bAutoStretch;
+
+	COLORREF m_color;
+	CBitmap	 m_compBitmap;
+
+	int m_nXstart;
+	int m_nYstart;
+	int m_nXstep;
+	int m_nYstep;
+	int m_nXres;
+	int m_nYres;
+	int m_nXlength;
+	int m_nYlength;
+
+	CTree m_Tree;
+	int m_nPoints;
+
+	static LPCTSTR m_lpszClassName;
 
 	// Generated message map functions
 protected:

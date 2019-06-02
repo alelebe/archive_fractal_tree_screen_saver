@@ -63,7 +63,7 @@ BOOL CSaverApp::InitInstance()
 
 	if (__argc == 1 || MatchOption(__argv[1], "c"))
 		DoConfig();
-	else if (MatchOption(__argv[1], "p"))
+	else if (MatchOption(__argv[1], "p") && __argc >= 3)
 	{
 		CWnd* pParent = CWnd::FromHandle((HWND)std::stoull(__argv[2]));
 		ASSERT(pParent != NULL);

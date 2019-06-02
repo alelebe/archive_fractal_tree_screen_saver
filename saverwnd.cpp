@@ -17,8 +17,6 @@ static char BASED_CODE THIS_FILE[] = __FILE__;
 CSaverWnd::CSaverWnd()
 {
 	m_ptLast = CPoint(-1, -1);
-	//m_nPos = 0;
-	//m_nStep = 1;
 }
 
 CSaverWnd::~CSaverWnd()
