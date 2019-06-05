@@ -18,19 +18,20 @@ public:
 	int m_nSpeed;
 
 	//int m_nPos;
-	//int m_nStep;
+	int m_nSteps;
 	//int m_nWidth;
 
 public:
 	void SetSpeed(int nSpeed);
-	//void SetPreview(BOOL bPreviewMode = TRUE);
-	void SetResolution(int nRes);
+	void SetSteps(int nSteps);
 	void SetColor(COLORREF cr);
 	void SetPenWidth(int nWidth);
 	void SetLineStyle(int nStyle);
 
 	// Operations
 private:
+	void ResetSteps(int nSteps);
+	void ResetCoords(int nXres, int nYres);
 	void Draw(CDC& wndDC);
 	void MoveDrawing(CDC& wndDC, CDC& memDC);
 	void StretchDrawing(CDC& wndDC, CDC& memDC);
@@ -49,23 +50,67 @@ private:
 		TIMER_ID = 1
 	};
 
-	BOOL	m_bAutoDelete;
-	BOOL	m_bAutoStretch;
+	BOOL	 m_bAutoDelete;
+	BOOL	 m_bAutoStretch;
+	//COLORREF m_color;
+	int		 m_nXres;
+	int		 m_nYres;
 
-	COLORREF m_color;
-	CBitmap	 m_compBitmap;
+	struct Fractal {
+		const int	sizeX, sizeY;	//bitmap size
 
-	int m_nXstart;
-	int m_nYstart;
-	int m_nXstep;
-	int m_nYstep;
-	int m_nXres;
-	int m_nYres;
-	int m_nXlength;
-	int m_nYlength;
+		CTree		tree;
+		CBitmap		bitmap;
+		COLORREF	color;
+		int			points;			//number of generated points
 
-	CTree m_Tree;
-	int m_nPoints;
+		int			coordX, coordY, stepX, stepY;
+		int			stretchX, stretchY;
+		bool		autoScale, enabled;
+		int			cxScreen, cyScreen;
+
+		Fractal();
+		void resetCoord(int nXres, int nYres);
+		void draw(CDC& wndDC);
+		void moveHide(CDC& wndDC);
+		void moveNext();
+		void moveShow(CDC& wndDC);
+
+	private:
+		struct MemoryDCHolder {
+			MemoryDCHolder(CDC& dc, CBitmap& bitmap)
+			:	wndDC(dc)
+			{
+				memoryDC.CreateCompatibleDC(&wndDC);
+				pOldBitmap = memoryDC.SelectObject(&bitmap);
+			}
+			~MemoryDCHolder() {
+				memoryDC.SelectObject(pOldBitmap);
+			}
+			BOOL SetPixelV(int x, int y, COLORREF crColor) {
+				return memoryDC.SetPixelV(x, y, crColor);
+			}
+			CDC& getWndDC() {
+				return wndDC;
+			}
+			CDC& getMemoryDC() {
+				return memoryDC;
+			}
+
+		private:
+			CDC&	wndDC;
+			CDC		memoryDC;
+			CBitmap*pOldBitmap;
+		};
+
+		void runBitBlt(MemoryDCHolder& holder, DWORD dwRop);
+	};
+
+	enum {
+		NUM_OF_OBJECTS = 4
+	};
+	Fractal m_objs[NUM_OF_OBJECTS];
+	int		m_nPoints;
 
 	static LPCTSTR m_lpszClassName;
 

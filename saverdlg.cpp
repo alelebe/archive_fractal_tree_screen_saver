@@ -124,8 +124,7 @@ BOOL CSaverDlg::OnInitDialog()
 	ScreenToClient(&rect);
 	m_wndPreview.Create(NULL, WS_VISIBLE|WS_CHILD, rect, this, NULL);
 	m_wndPreview.SetColor(m_color);
-	//m_wndPreview.SetPreview();
-	m_wndPreview.SetResolution(m_nResolution);
+	//m_wndPreview.SetResolution(m_nResolution);
 	m_wndPreview.SetSpeed(m_nSpeed);
 	OnSelendokStyle();
 	m_wndPreview.SetPenWidth(m_nWidth);
@@ -242,7 +241,7 @@ void CSaverDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	pScrollBar->SetScrollPos(nCurPos);
 
 	m_wndPreview.SetSpeed(m_scrollSpeed.GetScrollPos());
-	m_wndPreview.SetResolution(m_scrollRes.GetScrollPos());
+	//m_wndPreview.SetResolution(m_scrollRes.GetScrollPos());
 
 	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
 }
