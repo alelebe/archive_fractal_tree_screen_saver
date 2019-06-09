@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDrawWnd window
 
-class CDrawWnd : public CWnd, public CTree
+class CDrawWnd : public CWnd
 {
 	// Construction
 public:
@@ -14,39 +14,26 @@ public:
 
 	// Attributes
 public:
-	//CRgn m_rgnLast;
-	int m_nWidth;
-	int m_nSteps;
 	int m_nStyle;
 	int m_nSpeed;
 
 	//int m_nPos;
-	//int m_nStep;
-
-	//int m_nXres;
-	//int m_nYres;
-	COLORREF m_Color;
-
-private:
-	int m_nScale;
-	int m_nXstart;
-	int m_nYstart;
-
-	//LOGBRUSH m_logbrush;
-	//LOGBRUSH m_logbrushBlack;
-	static LPCTSTR m_lpszClassName;
+	int m_nSteps;
+	//int m_nWidth;
+	COLORREF m_crColor;
 
 public:
 	void SetSpeed(int nSpeed);
-	void SetResolution(int nRes);
+	void SetSteps(int nSteps);
 	void SetColor(COLORREF cr);
 	void SetPenWidth(int nWidth);
 	void SetLineStyle(int nStyle);
 
 	// Operations
 private:
-	void Draw(CDC& dc);
-	virtual void tree_placePoint(int x, int y, int z);
+	void ResetSteps(int nSteps, COLORREF crColor);
+	void ResetCoords(int nXres, int nYres);
+	void Draw(CDC& wndDC);
 
 	// Overrides
 public:
@@ -57,16 +44,71 @@ public:
 	//}}AFX_VIRTUAL
 
 // Implementation
-public:
-	virtual ~CDrawWnd();
-
 private:
-	enum {
-		TIMER_ID = 1
+	BOOL	 m_bAutoDelete;
+	BOOL	 m_bAutoStretch;
+	//COLORREF m_color;
+	int		 m_nXres;
+	int		 m_nYres;
+
+	struct Fractal {
+		const int	sizeX, sizeY;	//bitmap size
+
+		CTree		tree;
+		CBitmap		bitmap;
+		CBitmap		blackmap;
+		COLORREF	color;
+		int			points;			//number of generated points
+
+		int			coordX, coordY, stepX, stepY;
+		int			stretchX, stretchY;
+		bool		autoScale, enabled;
+		int			cxScreen, cyScreen;
+
+		Fractal();
+		void resetCoord(int nXres, int nYres);
+		void draw(CDC& wndDC);
+		void moveHide(CDC& wndDC);
+		void moveNext();
+		void moveShow(CDC& wndDC);
+
+	private:
+		struct DCHolder {
+			DCHolder(CDC& dc, CBitmap& bitmap)
+			:	wndDC(dc)
+			{
+				memoryDC.CreateCompatibleDC(&wndDC);
+				pOldBitmap = memoryDC.SelectObject(&bitmap);
+			}
+			~DCHolder() {
+				memoryDC.SelectObject(pOldBitmap);
+			}
+			BOOL SetPixelV(int x, int y, COLORREF crColor) {
+				return memoryDC.SetPixelV(x, y, crColor);
+			}
+			CDC& getWndDC() {
+				return wndDC;
+			}
+			CDC& getMemoryDC() {
+				return memoryDC;
+			}
+
+		private:
+			CDC&	wndDC;
+			CDC		memoryDC;
+			CBitmap*pOldBitmap;
+		};
+
+		void runBitBlt(DCHolder& holder, DWORD dwRop);
 	};
 
-	BOOL	m_bAutoDelete;
-	HDC		m_hDC;
+	enum {
+		NUM_OF_OBJECTS = 4
+	};
+	Fractal m_objs[NUM_OF_OBJECTS];
+	int		m_nPoints;
+
+	static LPCTSTR m_lpszClassName;
 
 	// Generated message map functions
 protected:
