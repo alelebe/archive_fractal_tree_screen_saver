@@ -4,11 +4,16 @@
 #include "stdafx.h"
 #include "saver.h"
 #include "drawwnd.h"
+#include <algorithm>
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char BASED_CODE THIS_FILE[] = __FILE__;
 #endif
+
+namespace {
+	static const int TIMER_ID = 1;
+}
 
 LPCTSTR CDrawWnd::m_lpszClassName = NULL;
 
@@ -24,7 +29,7 @@ enum {
 
 CDrawWnd::Fractal::Fractal()
 :	sizeX(SIZE_X), sizeY(SIZE_Y),
-	color(RGB(0,0,0)),	//black
+	color(RGB(255,255,255)),	//white
 	points(0),
 	coordX(0), coordY(0), stepX(0), stepY(0),
 	stretchX(sizeX), stretchY(sizeY),
@@ -35,13 +40,10 @@ CDrawWnd::Fractal::Fractal()
 
 void CDrawWnd::Fractal::resetCoord(int nXres, int nYres)
 {
-	//enable fractal in start position...
-	enabled = true;
+	enabled = true;		//enable fractal in start position...
 	cxScreen = nXres;
 	cyScreen = nYres;
-
 	autoScale = (nXres < sizeX || nYres < sizeY);
-	//autoRescale = true;
 
 	double ratio = 1.;
 	if (autoScale) {
@@ -62,12 +64,13 @@ void CDrawWnd::Fractal::resetCoord(int nXres, int nYres)
 	CDC dc;
 	dc.Attach(::GetDC(NULL));
 	bitmap.CreateCompatibleBitmap(&dc, sizeX, sizeY);
+	blackmap.CreateCompatibleBitmap(&dc, sizeX, sizeY);
 }
 
-void CDrawWnd::Fractal::runBitBlt(MemoryDCHolder& holder, DWORD dwRop)
+void CDrawWnd::Fractal::runBitBlt(DCHolder& memDCholder, DWORD dwRop)
 {
-	CDC& wndDC = holder.getWndDC();
-	CDC& memoryDC = holder.getMemoryDC();
+	CDC& wndDC = memDCholder.getWndDC();
+	CDC& memoryDC = memDCholder.getMemoryDC();
 
 	if (autoScale) {
 		wndDC.SetStretchBltMode(WHITEONBLACK);
@@ -83,16 +86,18 @@ void CDrawWnd::Fractal::draw(CDC& wndDC)
 	if (!enabled)
 		return;
 
-	MemoryDCHolder holder(wndDC, bitmap);
+	DCHolder memDCholder(wndDC, bitmap);
+	DCHolder blackDCholder(wndDC, blackmap);
 
-	tree.Render([&](int x, int y, int z) {
+	tree.Render(50, [&](int x, int y, int z) {
 		int px = START_X - (x - z);
 		int py = START_Y - y;
+		points++;
 
-		COLORREF cr = (points++ / 10000) % 2 ? RGB(0, 0, 0) : color;
+		memDCholder.SetPixelV(px, py, color);
+		blackDCholder.SetPixelV(px, py, RGB(0, 0, 0));
 
-		holder.SetPixelV(px, py, cr);
-		runBitBlt(holder, SRCPAINT);
+		runBitBlt(memDCholder, SRCPAINT);
 	});
 }
 
@@ -101,8 +106,8 @@ void CDrawWnd::Fractal::moveHide(CDC& wndDC)
 	if (!enabled || autoScale)
 		return;
 
-	MemoryDCHolder holder(wndDC, bitmap);
-	runBitBlt(holder, SRCINVERT);
+	DCHolder blackDCholder(wndDC, blackmap);
+	runBitBlt(blackDCholder, SRCCOPY);
 }
 
 void CDrawWnd::Fractal::moveShow(CDC& wndDC)
@@ -110,8 +115,8 @@ void CDrawWnd::Fractal::moveShow(CDC& wndDC)
 	if (!enabled || autoScale)
 		return;
 
-	MemoryDCHolder holder(wndDC, bitmap);
-	runBitBlt(holder, SRCPAINT);
+	DCHolder memDCholder(wndDC, bitmap);
+	runBitBlt(memDCholder, SRCPAINT);
 }
 
 void CDrawWnd::Fractal::moveNext()
@@ -151,8 +156,7 @@ CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 	
 	int nSteps = AfxGetApp()->GetProfileInt("Config", "Steps", 1);
 	if (nSteps <= 1)
-		nSteps = 150;
-	ResetSteps(nSteps);
+		nSteps = 50;
 
 	m_nSpeed = AfxGetApp()->GetProfileInt("Config", "Speed", 100);
 	if (m_nSpeed < 1)
@@ -162,9 +166,8 @@ CDrawWnd::CDrawWnd(BOOL bAutoDelete)
 		AfxGetApp()->GetProfileInt("Config", "ColorRed", 0),
 		AfxGetApp()->GetProfileInt("Config", "ColorGreen", 255),
 		AfxGetApp()->GetProfileInt("Config", "ColorBlue", 0));
-	for (auto& obj : m_objs) {
-		obj.color = crColor;
-	}
+
+	ResetSteps(nSteps, crColor);
 }
 
 BEGIN_MESSAGE_MAP(CDrawWnd, CWnd)
@@ -176,9 +179,10 @@ BEGIN_MESSAGE_MAP(CDrawWnd, CWnd)
         //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-void CDrawWnd::ResetSteps(int nSteps)
+void CDrawWnd::ResetSteps(int nSteps, COLORREF crColor)
 {
 	m_nSteps = nSteps;
+	m_crColor = crColor;
 
 	//step & directions
 	m_objs[0].stepX = m_nSteps;
@@ -189,6 +193,10 @@ void CDrawWnd::ResetSteps(int nSteps)
 	m_objs[2].stepY = -m_nSteps;
 	m_objs[3].stepX = m_nSteps;
 	m_objs[3].stepY = -m_nSteps;
+
+	for (auto& obj : m_objs) {
+		obj.color = crColor;
+	}
 }
 
 void CDrawWnd::ResetCoords(int nXres, int nYres)
@@ -222,8 +230,9 @@ void CDrawWnd::Draw(CDC& wndDC)
 void CDrawWnd::SetSpeed(int nSpeed)
 {
 	KillTimer(TIMER_ID);
-	m_nSpeed = nSpeed;
-	VERIFY(SetTimer(TIMER_ID, 500 + 500 - m_nSpeed * 5, NULL) != 0);
+	
+	m_nSpeed = std::min(100, nSpeed);
+	VERIFY(SetTimer(TIMER_ID, 250 + 500 - m_nSpeed * 5, NULL) != 0);
 }
 
 void CDrawWnd::SetSteps(int nSteps)
@@ -231,7 +240,7 @@ void CDrawWnd::SetSteps(int nSteps)
 	nSteps = (nSteps < 1) ? 1 : nSteps;
 	if (nSteps != m_nSteps)
 	{
-		ResetSteps(nSteps);
+		ResetSteps(nSteps, m_crColor);
 		Invalidate();
 		UpdateWindow();
 	}

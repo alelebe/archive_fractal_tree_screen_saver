@@ -20,6 +20,7 @@ public:
 	//int m_nPos;
 	int m_nSteps;
 	//int m_nWidth;
+	COLORREF m_crColor;
 
 public:
 	void SetSpeed(int nSpeed);
@@ -30,11 +31,9 @@ public:
 
 	// Operations
 private:
-	void ResetSteps(int nSteps);
+	void ResetSteps(int nSteps, COLORREF crColor);
 	void ResetCoords(int nXres, int nYres);
 	void Draw(CDC& wndDC);
-	void MoveDrawing(CDC& wndDC, CDC& memDC);
-	void StretchDrawing(CDC& wndDC, CDC& memDC);
 
 	// Overrides
 public:
@@ -46,10 +45,6 @@ public:
 
 // Implementation
 private:
-	enum {
-		TIMER_ID = 1
-	};
-
 	BOOL	 m_bAutoDelete;
 	BOOL	 m_bAutoStretch;
 	//COLORREF m_color;
@@ -61,6 +56,7 @@ private:
 
 		CTree		tree;
 		CBitmap		bitmap;
+		CBitmap		blackmap;
 		COLORREF	color;
 		int			points;			//number of generated points
 
@@ -77,14 +73,14 @@ private:
 		void moveShow(CDC& wndDC);
 
 	private:
-		struct MemoryDCHolder {
-			MemoryDCHolder(CDC& dc, CBitmap& bitmap)
+		struct DCHolder {
+			DCHolder(CDC& dc, CBitmap& bitmap)
 			:	wndDC(dc)
 			{
 				memoryDC.CreateCompatibleDC(&wndDC);
 				pOldBitmap = memoryDC.SelectObject(&bitmap);
 			}
-			~MemoryDCHolder() {
+			~DCHolder() {
 				memoryDC.SelectObject(pOldBitmap);
 			}
 			BOOL SetPixelV(int x, int y, COLORREF crColor) {
@@ -103,7 +99,7 @@ private:
 			CBitmap*pOldBitmap;
 		};
 
-		void runBitBlt(MemoryDCHolder& holder, DWORD dwRop);
+		void runBitBlt(DCHolder& holder, DWORD dwRop);
 	};
 
 	enum {
